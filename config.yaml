@@ -1,7 +1,10 @@
-# Also can be set in env: TBD_APPKEY, TBD_SECRET
-appkey: ""
-appsecret: ""
+# Also can be set in env: TBD_APPKEY, TBD_SECRETKEY
+#appkey: ""
+#secretkey: ""
+
+log:
+  level: 1
 
 chat:
-  color: "magenta_bold"
+  color: "cyan"
   model: "ERNIE-Bot-4"

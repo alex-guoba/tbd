@@ -41,7 +41,9 @@ var colorsOutput = map[string]func(format string, a ...interface{}) string{
 var gl *Logger
 
 func init() {
-	gl = NewLogger("")
+	// viper not loaded, so this would not work, you should set level mannually in main
+	// level := viper.GetInt("log.level")
+	gl = NewLogger("", LevelDebug)
 }
 
 func (l Level) String() string {
@@ -61,27 +63,50 @@ func (l Level) String() string {
 }
 
 type Logger struct {
+	level  Level
 	logger *log.Logger
 }
 
-func NewLogger(prefix string) *Logger {
+func NewLogger(prefix string, level Level) *Logger {
 	l := log.New(os.Stdout, prefix, 0)
-	return &Logger{logger: l}
+	return &Logger{logger: l, level: level}
 }
 
 func (l *Logger) outWithColor(level Level, content string) {
 	switch level {
 	case LevelDebug:
-		l.logger.Print(color.WhiteString(content))
+		if l.level <= LevelDebug {
+			l.logger.Print(color.WhiteString(content))
+		}
+
 	case LevelInfo:
-		l.logger.Print(color.GreenString(content))
+		if l.level <= LevelInfo {
+			l.logger.Print(color.GreenString(content))
+		}
+
 	case LevelWarn:
-		l.logger.Print(color.YellowString(content))
+		if l.level <= LevelWarn {
+			l.logger.Print(color.YellowString(content))
+		}
+
 	case LevelError:
-		l.logger.Print(color.RedString(content))
+		if l.level <= LevelError {
+			l.logger.Print(color.RedString(content))
+		}
+
 	case LevelFatal:
-		l.logger.Fatal(color.HiRedString(content))
+		if l.level <= LevelFatal {
+			l.logger.Fatal(color.HiRedString(content))
+		}
 	}
+}
+
+func SetLevel(level int) {
+	gl.SetLevel(level)
+}
+
+func (l *Logger) SetLevel(level int) {
+	l.level = Level(level)
 }
 
 func Debug(v ...interface{}) { gl.Debug(v...) }

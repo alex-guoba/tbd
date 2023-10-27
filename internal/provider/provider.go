@@ -5,6 +5,7 @@ import (
 
 	"github.com/alex-guoba/tbd/internal/entity"
 	"github.com/alex-guoba/tbd/internal/models"
+	"github.com/alex-guoba/tbd/pkg/logger"
 	ernie "github.com/anhao/go-ernie"
 	"github.com/spf13/viper"
 )
@@ -16,7 +17,9 @@ type Provider struct {
 }
 
 func NewProvider() *Provider {
-	client := ernie.NewDefaultClient(viper.GetString("appkey"), viper.GetString("appsecret"))
+	client := ernie.NewDefaultClient(viper.GetString("appkey"), viper.GetString("secretkey"))
+	logger.Debugf("key: %s, secret: %s", viper.GetString("appkey"), viper.GetString("secretkey"))
+
 	return &Provider{client: client}
 }
 
