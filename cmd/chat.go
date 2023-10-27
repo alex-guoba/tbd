@@ -10,6 +10,7 @@ import (
 	"github.com/alex-guoba/tbd/internal/provider"
 	"github.com/alex-guoba/tbd/pkg/logger"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // chatCmd represents the chat command
@@ -21,13 +22,13 @@ tbd "how about the weather?"
 `,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
-			logger.Warnf("Please input your prompt")
+			logger.Warnf("Please input your prompt!")
 			return
 		}
 
 		msg := args[0]
 		prov := provider.NewProvider()
-		model := models.NewErnieModel(prov.GetClient())
+		model := models.NewModel(viper.GetString("chat.model"), prov.GetClient())
 
 		// fmt.Println(msg)
 

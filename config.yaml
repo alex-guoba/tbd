@@ -3,5 +3,5 @@ appkey: "G2HkTaPgSgeDxrD782eCGsiu"
 appsecret: "mmvcCXqXUCIHZbmHs5g7MY0GaNQqk109"
 
 chat:
-  color: "yellow_bold"
-  dls: "dumy"
+  color: "magenta_bold"
+  model: "ERNIE-Bot-4"

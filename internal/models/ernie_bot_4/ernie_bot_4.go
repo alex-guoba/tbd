@@ -1,38 +1,37 @@
-package models
+package ernie_bot_4
 
 import (
 	"context"
 	"encoding/json"
 	"fmt"
 
-	"github.com/alex-guoba/tbd/internal/provider"
+	"github.com/alex-guoba/tbd/internal/entity"
 	ernie "github.com/anhao/go-ernie"
 )
 
-const ModelNameErnieBot = "ernie-bot"
+const ModelNameErnieBot4 = "ernie-bot-4"
 
-type ErnieModel struct {
+type ErnieBot4 struct {
 	client *ernie.Client
 }
 
-func NewErnieModel(client *ernie.Client) ErnieModel {
-	return ErnieModel{
+func New(client *ernie.Client) ErnieBot4 {
+	return ErnieBot4{
 		client: client,
 	}
 }
 
-func (m ErnieModel) ModelName(ctx context.Context) string {
-	return ModelNameErnieBot
+func (m ErnieBot4) Name(ctx context.Context) string {
+	return ModelNameErnieBot4
 }
 
-func (m ErnieModel) convertCompletionReplay(ersp *ernie.ErnieBotResponse) (*provider.ChatCompletionResponse, error) {
-
+func (m ErnieBot4) convertCompletionReplay(ersp *ernie.ErnieBot4Response) (*entity.ChatCompletionResponse, error) {
 	buf, err := json.Marshal(ersp)
 	if err != nil {
 		return nil, fmt.Errorf("json error. %v", err.Error())
 	}
 
-	var completionRsp provider.ChatCompletionResponse
+	var completionRsp entity.ChatCompletionResponse
 	err = json.Unmarshal(buf, &completionRsp)
 	if err != nil {
 		return nil, fmt.Errorf("json error. %v", err.Error())
@@ -41,12 +40,12 @@ func (m ErnieModel) convertCompletionReplay(ersp *ernie.ErnieBotResponse) (*prov
 	return &completionRsp, nil
 }
 
-func (m ErnieModel) GetCompletion(ctx context.Context, request *provider.ChatCompletionRequest) (*provider.ChatCompletionResponse, error) {
+func (m ErnieBot4) GetCompletion(ctx context.Context, request *entity.ChatCompletionRequest) (*entity.ChatCompletionResponse, error) {
 	if len(request.Messages) == 0 {
 		return nil, fmt.Errorf("empty message")
 	}
 
-	req := ernie.ErnieBotRequest{}
+	req := ernie.ErnieBot4Request{}
 	req.Messages = []ernie.ChatCompletionMessage{
 		{
 			Role:    ernie.MessageRoleUser,
@@ -54,7 +53,7 @@ func (m ErnieModel) GetCompletion(ctx context.Context, request *provider.ChatCom
 		},
 	}
 
-	rsp, err := m.client.CreateErnieBotChatCompletion(ctx, req)
+	rsp, err := m.client.CreateErnieBot4ChatCompletion(ctx, req)
 	if err != nil {
 		return nil, err
 	}
