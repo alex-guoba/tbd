@@ -6,21 +6,21 @@ A command-line productivity tool powered by Baidu Qianfan.
 go build
 ```
 
-You'll need an API Key and secret. 
+You'll need an API Key and Secret Key. 
 
 1. Create application on here: https://console.bce.baidu.com/qianfan/ais/console/applicationConsole/application
-2. Then you will get API Key and Secret Key.
+2. Retrive API Key and Secret Key from the website after application approved.
 
 Set the API Key and Secret Key in `config.yaml` stored in `$HOME/.tgb/` or `/etc/tgb/`.
 
 ## Usage
-`tbd` has a variety of use cases, including simple queries, shell queries.
+`tbd` has a variety of use cases, including simple queries, summerization and analyzing.
 
 ### Simple queries
 We can use it as normal search engine, asking about anything:
 
 ```shell
- » ./tbd chat "How to install python on my computer"
+ » tbd chat "How to install python"
 To install Python on your computer, follow these steps:
 
 1. Go to the Python website ([python.org](http://python.org)) and download the latest version of Python that matches your operating system.
@@ -33,20 +33,32 @@ If you have any issues with the installation, you can refer to the Python docume
 Also in chinese: 
 
 ```shell
- » ./tbd chat "今天深圳天气怎样？"                                                                                                              1 ↵
+ » tbd chat "今天深圳天气怎样？"                                                                                                              1 ↵
 深圳现在气温25℃，晴，东北风1级，2023年10月27日（今日）气温22~29℃，空气质量优，空气质量指数27。
-
-
-近几日天气信息：
-
-* 2023-10-26：阴转多云，23~30℃，东南风<3级，空气质量优。
-
-* **2023-10-27：阴，22~29℃，无持续风向<3级，空气质量优**。
-
-* 2023-10-28：小雨转中雨，22~25℃，无持续风向<3级，空气质量优。
-
-* 2023-10-29：中雨，21~25℃，东风3-4级，空气质量优。
-
-* 2023-10-30：阴转晴，21~26℃，东北风3-4级，空气质量优。
-* 2023-10-28：小雨转中雨，22~25℃，无持续风向<3级，空气质量优。
 ```
+
+### Summerization and analyzing
+
+`tbd` accepts prompt from both stdin and command line argument. This versatile feature is particularly useful when you need to pass file content or pipe output from other commands to the Baidu Qianfan models for summarization or analysis. For example, you can easily diagnostic local network condition:
+
+Here is a summerization example: 
+
+```shell
+ » cat ./README.md | tbd chat "Briefly summarize the functions of tbd tools from README file, keep it to 40 words or less"
+tbd是一个命令行生产力工具，由百度千言驱动，可用于简单查询、摘要和分析。它接受来自stdin和命令行参数的提示，具有多种使用场景。
+
+```
+
+Analyzing example:
+
+```shell
+ » ping -t 2 cloud.baidu.com | tbd chat "diagnostic network condition from the Ping result"
+根据提供的ping结果，我们可以得出以下网络状况诊断：
+
+1. **连通性**：从结果来看，您成功地ping到了`bce.baidu.n.shifen.com`，且没有丢包（0.0%!p(MISSING)acket loss）。这意味着您的计算机与该服务器之间的网络连接是稳定的。
+2. **延迟**：往返的最小/平均/最大/标准偏差延迟分别为：11.511/11.809/12.107/0.298 ms。这些数值表示您的计算机与服务器之间的响应时间。一般来说，延迟越低，网络性能越好。您的延迟数值相对较低，表 明网络连接状况良好。
+
+综上所述，根据这个ping结果，您的计算机与综上所述，根据这个ping结果，您的计算机与`bce.baidu.n.shifen.com`服务器之间的网络连接稳定，且延迟较低。如果您在使用该服务器或访问相关应用时遇到问题，那么问题可能不在于网络连接，而是其他因素，如应用服务器本身的问题、软件问题等。
+```
+
+

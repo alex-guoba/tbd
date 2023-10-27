@@ -45,6 +45,7 @@ func (m ErnieBot) GetCompletion(ctx context.Context, request *entity.ChatComplet
 		return nil, fmt.Errorf("empty message")
 	}
 
+	// TODO: support `system` parameter
 	req := ernie.ErnieBotRequest{}
 	req.Messages = []ernie.ChatCompletionMessage{
 		{

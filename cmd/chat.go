@@ -5,6 +5,9 @@ package cmd
 
 import (
 	"context"
+	"io"
+	"os"
+	"strings"
 
 	"github.com/alex-guoba/tbd/internal/models"
 	"github.com/alex-guoba/tbd/internal/provider"
@@ -12,6 +15,29 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
+
+// Read prompt from pipe(like other file or shell cmd outputs), used to statics and anaylyze data
+func readFromPipe() string {
+	stat, err := os.Stdin.Stat()
+	if err != nil {
+		logger.Error(err)
+		return ""
+	}
+
+	if stat.Mode()&os.ModeNamedPipe == 0 {
+		// not pipe
+		return ""
+	} else {
+		stdin, err := io.ReadAll(os.Stdin)
+		if err != nil {
+			logger.Error(err)
+			return ""
+		}
+		str := string(stdin)
+
+		return strings.TrimSuffix(str, "\n")
+	}
+}
 
 // chatCmd represents the chat command
 var chatCmd = &cobra.Command{
@@ -21,22 +47,30 @@ var chatCmd = &cobra.Command{
 tbd "how about the weather?"
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) == 0 {
+		pipeMsg := readFromPipe()
+
+		if len(args) == 0 && pipeMsg == "" {
 			logger.Warnf("Please input your prompt!")
 			return
 		}
 
+		// Converge the chat completion request from pipe and args
 		msg := args[0]
+		if len(pipeMsg) > 0 {
+			msg = pipeMsg + "\n" + msg
+		}
+
+		logger.Debug(msg)
+
 		prov := provider.NewProvider()
 		model := models.NewModel(viper.GetString("chat.model"), prov.GetClient())
-
-		// fmt.Println(msg)
 
 		completion, err := prov.CreateChatCompletion(context.Background(), model, msg)
 		if err != nil {
 			logger.Errorf("ernie bot error: %v", err)
 			return
 		}
+
 		logger.ChatReplay(completion.Result)
 	},
 }
