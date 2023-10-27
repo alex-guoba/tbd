@@ -1,6 +1,6 @@
 # Also can be set in env: TBD_APPKEY, TBD_SECRET
-appkey: "G2HkTaPgSgeDxrD782eCGsiu"
-appsecret: "mmvcCXqXUCIHZbmHs5g7MY0GaNQqk109"
+appkey: ""
+appsecret: ""
 
 chat:
   color: "magenta_bold"
