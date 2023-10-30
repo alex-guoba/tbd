@@ -174,16 +174,29 @@ func ChatReplay(format string, v ...interface{}) { gl.ChatReplay(format, v...) }
 
 func (l *Logger) ChatReplay(format string, v ...interface{}) {
 	clr := viper.GetString("chat.color")
+
+	// Note: sys logger will add a newline Automatically, that's not friendly in streaming dialogs. so I replace logger with fmt lib.
+	if output, ok := colorsOutput[clr]; ok {
+		fmt.Print(output(fmt.Sprintf(format, v...)))
+		// l.logger.Print(prompt, msg)
+	} else {
+		// default
+		// l.logger.Print(prompt, color.MagentaString(fmt.Sprintf(format, v...)))
+		fmt.Print(color.MagentaString(fmt.Sprintf(format, v...)))
+	}
+}
+
+func ChatReplayNewline() { gl.ChatReplayNewline() }
+func (l *Logger) ChatReplayNewline() {
+	fmt.Println("")
+}
+
+func ChatReplayPrompt() { gl.ChatReplayPrompt() }
+func (l *Logger) ChatReplayPrompt() {
 	prompt := viper.GetString("chat.prompt")
 
 	if len(prompt) > 0 {
-		prompt = color.CyanString(prompt)
+		fmt.Print(color.CyanString(prompt))
 	}
 
-	if output, ok := colorsOutput[clr]; ok {
-		l.logger.Print(prompt, output(fmt.Sprintf(format, v...)))
-	} else {
-		// default
-		l.logger.Print(prompt, color.MagentaString(fmt.Sprintf(format, v...)))
-	}
 }

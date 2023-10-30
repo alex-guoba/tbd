@@ -1,6 +1,8 @@
 package entity
 
-import "fmt"
+import (
+	"fmt"
+)
 
 const (
 	MessageRoleUser      = "user"
@@ -47,6 +49,17 @@ type ChatCompletionRequest struct {
 	// Functions       []ErnieFunction         `json:"functions,omitempty"`
 }
 
+func CopyChatCompletionRequest(src *ChatCompletionRequest) *ChatCompletionRequest {
+	dest := &ChatCompletionRequest{}
+	*dest = *src
+	// copy list
+	for _, msg := range src.Messages {
+		newmsg := msg
+		dest.Messages = append(dest.Messages, newmsg)
+	}
+	return dest
+}
+
 // resonse
 // type ErniePluginUsage struct {
 // 	Name           string `json:"name"`
@@ -63,6 +76,9 @@ type ChatCompletionRequest struct {
 // 	Plugins          []ErniePluginUsage `json:"plugins"`
 // }
 
+// callback for already received response in stream-mode
+type StreamCallback func(*ChatCompletionResponse) error
+
 type ChatCompletionResponse struct {
 	Id               string `json:"id"`
 	Object           string `json:"object"`
@@ -76,4 +92,15 @@ type ChatCompletionResponse struct {
 	// FunctionCall     ErnieFunctionCall `json:"function_call"`
 	BanRound int `json:"ban_round"`
 	APIError
+}
+
+func CopyChatCompletionResponse(src *ChatCompletionResponse) *ChatCompletionResponse {
+	dest := &ChatCompletionResponse{}
+	*dest = *src
+	// copy list
+	// for _, msg := range src.Messages {
+	// 	newmsg := msg
+	// 	dest.Messages = append(dest.Messages, newmsg)
+	// }
+	return dest
 }

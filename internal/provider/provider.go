@@ -38,19 +38,37 @@ func (prov *Provider) GetClient() *ernie.Client {
 
 func (prov *Provider) CreateChatCompletion(ctx context.Context, model models.Model,
 	request *entity.ChatCompletionRequest, agent *Agent) (*entity.ChatCompletionResponse, error) {
-	spinner := animator.New()
 
+	spinner := animator.New()
 	spinner.Start()
 	defer spinner.Stop()
 
 	if rsp, err := model.GetCompletion(ctx, request); err != nil {
 		return nil, err
 	} else {
-		// publish
 		if agent != nil {
+			// deep copy request and response
 			agent.Publish(TopicChat, &TopicChatMsg{
-				Req: request,
-				Rsp: rsp,
+				Req: entity.CopyChatCompletionRequest(request),
+				Rsp: entity.CopyChatCompletionResponse(rsp),
+			})
+		}
+
+		return rsp, nil
+	}
+}
+
+func (prov *Provider) CreateChatStreamCompletion(ctx context.Context, model models.Model,
+	request *entity.ChatCompletionRequest, agent *Agent, callback entity.StreamCallback) (*entity.ChatCompletionResponse, error) {
+
+	if rsp, err := model.GetCompletionStream(ctx, request, callback); err != nil {
+		return nil, err
+	} else {
+		if agent != nil {
+			// deep copy request and response
+			agent.Publish(TopicChat, &TopicChatMsg{
+				Req: entity.CopyChatCompletionRequest(request),
+				Rsp: entity.CopyChatCompletionResponse(rsp),
 			})
 		}
 

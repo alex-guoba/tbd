@@ -14,7 +14,13 @@ import (
 
 type Model interface {
 	Name(ctx context.Context) string
+
+	// single replay
 	GetCompletion(ctx context.Context, request *entity.ChatCompletionRequest) (*entity.ChatCompletionResponse, error)
+
+	// stream replay
+	GetCompletionStream(ctx context.Context, request *entity.ChatCompletionRequest,
+		callback entity.StreamCallback) (*entity.ChatCompletionResponse, error)
 }
 
 func NewModel(name string, client *ernie.Client) Model {

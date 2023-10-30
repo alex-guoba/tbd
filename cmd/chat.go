@@ -21,6 +21,7 @@ import (
 )
 
 var flagInteract bool
+var flagStream bool
 
 // chatCmd represents the chat command
 var chatCmd = &cobra.Command{
@@ -120,10 +121,33 @@ func memosSync(ctx context.Context, agent *provider.Agent) *sync.SyncMemos {
 	return memos
 }
 
+func replyCallback(rsp *entity.ChatCompletionResponse) error {
+	// logger.Debug(*rsp)
+	if flagStream == false {
+		logger.ChatReplayPrompt()
+		logger.ChatReplay(rsp.Result)
+		logger.ChatReplayNewline()
+		return nil
+	}
+	// stream
+	if rsp.SentenceId == 0 {
+		logger.ChatReplayPrompt()
+	}
+	logger.ChatReplay(rsp.Result)
+	if rsp.IsEnd {
+		logger.ChatReplayNewline()
+	}
+	return nil
+}
+
 // Start dialogus(once or mutlti-round)
 func startDialogs(ctx context.Context, prov *provider.Provider, model models.Model,
 	initialMsg string, interact bool, agent *provider.Agent) {
-	request := &entity.ChatCompletionRequest{}
+	request := &entity.ChatCompletionRequest{
+		Stream: flagStream,
+	}
+	var response *entity.ChatCompletionResponse
+	var err error
 	msg := initialMsg
 	promp := prompts.New(ctx)
 
@@ -145,23 +169,30 @@ func startDialogs(ctx context.Context, prov *provider.Provider, model models.Mod
 			Role:    entity.MessageRoleUser,
 			Content: msg,
 		})
-
 		logger.Debug(request.Messages)
 
-		completion, err := prov.CreateChatCompletion(ctx, model, request, agent)
-		if err != nil {
-			logger.Errorf("ernie bot error: %v", err)
-			return
+		if request.Stream {
+			response, err = prov.CreateChatStreamCompletion(ctx, model, request, agent, replyCallback)
+			if err != nil {
+				logger.Errorf("create stream chat error: %v", err)
+				return
+			}
+		} else {
+			response, err = prov.CreateChatCompletion(ctx, model, request, agent)
+			if err != nil {
+				logger.Errorf("create chat error: %v", err)
+				return
+			}
+			_ = replyCallback(response)
 		}
-
-		logger.ChatReplay(completion.Result)
 
 		if !interact {
 			break
 		}
+		// update messages to bring dialog context in interactive mode
 		request.Messages = append(request.Messages, entity.ChatCompletionMessage{
 			Role:    entity.MessageRoleAssistant,
-			Content: completion.Result,
+			Content: response.Result,
 		})
 		msg = promp.ReadFromStdin()
 	}
@@ -170,6 +201,7 @@ func startDialogs(ctx context.Context, prov *provider.Provider, model models.Mod
 func init() {
 	// May be promote to root cmd.
 	chatCmd.Flags().BoolVarP(&flagInteract, "interact", "i", false, "Interactive mode for multi-round dialogus")
+	chatCmd.Flags().BoolVarP(&flagStream, "stream", "s", false, "Open streaming response")
 
 	rootCmd.AddCommand(chatCmd)
 }

@@ -15,7 +15,7 @@ You'll need an API Key and Secret Key.
 1. Create application on here: https://console.bce.baidu.com/qianfan/ais/console/applicationConsole/application
 2. Retrive API Key and Secret Key from the website after application approved.
 
-Set the API Key and Secret Key in `config.yaml` stored in `$HOME/.config/tgb/` or `/etc/tgb/`.
+Set the API Key and Secret Key in `config.yaml` stored in `./`, `$HOME/.config/tgb/` or `/etc/tgb/`.
 
 ## Usage
 `tbd` has a variety of use cases, including simple queries, summerization and analyzing.

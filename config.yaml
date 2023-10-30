@@ -16,4 +16,4 @@ sync:
     #token: "456"
   memos:
     host: "http://127.0.0.1:8081/"
-    token: "eyJhbGciOiJIUzI1NiIsImtpZCI6InYxIiwidHlwIjoiSldUIn0.eyJuYW1lIjoibWVtb3MtZGVtbyIsImlzcyI6Im1lbW9zIiwic3ViIjoiMTAxIiwiYXVkIjpbInVzZXIuYWNjZXNzLXRva2VuIl0sImlhdCI6MTY5ODU5ODM3Nn0.RffERLO8C3Db4p1cGlaDTVSodfHtcYKWNDJgT3SqMkw"
+    token: ""

@@ -10,6 +10,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/alex-guoba/tbd/internal/entity"
 	"github.com/alex-guoba/tbd/internal/provider"
 	"github.com/alex-guoba/tbd/pkg/logger"
 )
@@ -63,7 +64,7 @@ func (m *SyncMemos) formatContent(msg *provider.TopicChatMsg) string {
 		// content += "#TBT#" +  + ": " + last.Content + "\n"
 		content = fmt.Sprintf("#TBT# [%s]: %s\n", last.Role, last.Content)
 	}
-	content += msg.Rsp.Result
+	content = content + fmt.Sprintf("[%s]: ", entity.MessageRoleAssistant) + msg.Rsp.Result
 	return content
 }
 
