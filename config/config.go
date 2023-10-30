@@ -8,7 +8,9 @@ import (
 )
 
 func InitConfig() error {
-	viper.SetConfigFile("config.yaml") // 配置文件名称
+	viper.SetConfigType("yaml")
+	viper.SetConfigName("config")
+	// viper.SetConfigFile("config.yaml") // 配置文件名称
 
 	viper.AddConfigPath("/etc/tgb/")          // 查找配置文件所在的路径
 	viper.AddConfigPath("$HOME/.config/tgb/") // 多次调用以添加多个搜索路径
