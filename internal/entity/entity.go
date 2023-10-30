@@ -2,6 +2,11 @@ package entity
 
 import "fmt"
 
+const (
+	MessageRoleUser      = "user"
+	MessageRoleAssistant = "assistant"
+)
+
 type APIError struct {
 	ErrorCode int    `json:"error_code"`
 	ErrorMsg  string `json:"error_msg"`

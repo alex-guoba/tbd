@@ -174,11 +174,16 @@ func ChatReplay(format string, v ...interface{}) { gl.ChatReplay(format, v...) }
 
 func (l *Logger) ChatReplay(format string, v ...interface{}) {
 	clr := viper.GetString("chat.color")
+	prompt := viper.GetString("chat.prompt")
+
+	if len(prompt) > 0 {
+		prompt = color.CyanString(prompt)
+	}
 
 	if output, ok := colorsOutput[clr]; ok {
-		l.logger.Print(output(fmt.Sprintf(format, v...)))
+		l.logger.Print(prompt, output(fmt.Sprintf(format, v...)))
 	} else {
 		// default
-		l.logger.Print(color.MagentaString(fmt.Sprintf(format, v...)))
+		l.logger.Print(prompt, color.MagentaString(fmt.Sprintf(format, v...)))
 	}
 }

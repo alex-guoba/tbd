@@ -46,12 +46,18 @@ func (m ErnieBot4) GetCompletion(ctx context.Context, request *entity.ChatComple
 	}
 
 	req := ernie.ErnieBot4Request{}
-	req.Messages = []ernie.ChatCompletionMessage{
-		{
-			Role:    ernie.MessageRoleUser,
-			Content: request.Messages[0].Content,
-		},
+	for _, msg := range request.Messages {
+		req.Messages = append(req.Messages, ernie.ChatCompletionMessage{
+			Role:    msg.Role,
+			Content: msg.Content,
+		})
 	}
+	// req.Messages = []ernie.ChatCompletionMessage{
+	// 	{
+	// 		Role:    ernie.MessageRoleUser,
+	// 		Content: request.Messages[0].Content,
+	// 	},
+	// }
 
 	rsp, err := m.client.CreateErnieBot4ChatCompletion(ctx, req)
 	if err != nil {

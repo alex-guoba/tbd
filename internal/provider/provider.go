@@ -5,12 +5,21 @@ import (
 
 	"github.com/alex-guoba/tbd/internal/entity"
 	"github.com/alex-guoba/tbd/internal/models"
+	"github.com/alex-guoba/tbd/pkg/animator"
 	"github.com/alex-guoba/tbd/pkg/logger"
 	ernie "github.com/anhao/go-ernie"
 	"github.com/spf13/viper"
 )
 
-/////////////////////////////////////////////////////////////////////
+// Chat message
+const TopicChat = "chat"
+
+type TopicChatMsg struct {
+	Req *entity.ChatCompletionRequest
+	Rsp *entity.ChatCompletionResponse
+}
+
+///////////////////////////////////////////////////////////////////
 
 type Provider struct {
 	client *ernie.Client
@@ -27,19 +36,24 @@ func (prov *Provider) GetClient() *ernie.Client {
 	return prov.client
 }
 
-func (prov *Provider) CreateChatCompletion(ctx context.Context, model models.Model, msg string) (*entity.ChatCompletionResponse, error) {
-	request := &entity.ChatCompletionRequest{
-		Messages: []entity.ChatCompletionMessage{
-			{
-				Content: msg,
-			},
-		},
-		// ignore other field now
-	}
+func (prov *Provider) CreateChatCompletion(ctx context.Context, model models.Model,
+	request *entity.ChatCompletionRequest, agent *Agent) (*entity.ChatCompletionResponse, error) {
+	spinner := animator.New()
+
+	spinner.Start()
+	defer spinner.Stop()
 
 	if rsp, err := model.GetCompletion(ctx, request); err != nil {
 		return nil, err
 	} else {
+		// publish
+		if agent != nil {
+			agent.Publish(TopicChat, &TopicChatMsg{
+				Req: request,
+				Rsp: rsp,
+			})
+		}
+
 		return rsp, nil
 	}
 }

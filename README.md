@@ -1,6 +1,8 @@
 # tbd
 A command-line productivity tool powered by Baidu Qianfan.
 
+English | [简体中文](./README.zh-CN.md)
+
 ## Installation
 ```shell
 go build
@@ -60,5 +62,29 @@ Analyzing example:
 
 综上所述，根据这个ping结果，您的计算机与综上所述，根据这个ping结果，您的计算机与`bce.baidu.n.shifen.com`服务器之间的网络连接稳定，且延迟较低。如果您在使用该服务器或访问相关应用时遇到问题，那么问题可能不在于网络连接，而是其他因素，如应用服务器本身的问题、软件问题等。
 ```
+
+
+### Interactive mode
+
+`tbd` support multiple rounds dialogus. It can be used in complex tasks or to clarify the question, i.e. if the question raised by the user is not clear or specific enough. 
+
+use `-i` or `--interact` args to enter into interactive mode. `exit` will finished the dialog:
+
+```shell
+» tbd chat -i
+please remember my favorite number: 9
+# -> Of course, I will remember your favorite number as 9. Is there anything else I can assist you with?
+what would be my favorite number + 4?
+# -> Your favorite number is 9, so adding 4 to it would result in 13. Therefore, your favorite number plus 4 would be 13.
+exit
+```
+
+### Sync 
+
+`tbd` support syning dialog message (request & response) to external system. like memos. See `config.yaml` for more detail.
+
+## Reference
+
+- [How to write prompt](https://console.bce.baidu.com/qianfan/prompt/template)
 
 

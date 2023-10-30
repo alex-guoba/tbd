@@ -19,8 +19,6 @@ tbd "how about the weather?"
 	CompletionOptions: cobra.CompletionOptions{
 		DisableDefaultCmd: true,
 	},
-	// Run: func(cmd *cobra.Command, args []string) {
-	// },
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
