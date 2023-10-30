@@ -49,25 +49,23 @@ Here is a summerization example:
 
 ```shell
  » cat ./README.md | tbd chat "Briefly summarize the functions of tbd tools from README file, keep it to 40 words or less"
-# -> tbd是一个命令行生产力工具，由百度千言驱动，可用于简单查询、摘要和分析。它接受来自stdin和命令行参数的提示，具有多种使用场景。该工具还支持多轮对话和同步对话消息到外部系统。
+# -> BD is a command-line productivity tool powered by Baidu Qianfan, used for simple queries, summaries, and analysis. It accepts prompts from stdin and command-line arguments, offering versatility in usage scenarios. The tool also supports multi-round conversations and syncing conversation messages to external systems.
 ```
 
 Analyzing example:
 
 ```shell
  » ping -t 2 cloud.baidu.com | tbd chat "diagnostic network condition from the Ping result"
-# -> 根据提供的ping结果，我们可以得出以下网络状况诊断：
-# -> 1. **连通性**：从结果来看，您成功地ping到了`bce.baidu.n.shifen.com`，且没有丢包（0.0%!p(MISSING)acket loss）。这意味着您的计算机与该服务器之间的网络连接是稳定的。
-# -> 2. **延迟**：往返的最小/平均/最大/标准偏差延迟分别为：11.511/11.809/12.107/0.298 ms。这些数值表示您的计算机与服务器之间的响应时间。一般来说，延迟越低，网络性能越好。您的延迟数值相对较低，表明网络连接状况良好。
-# -> 综上所述，根据这个ping结果，您的计算机与综上所述，根据这个ping结果，您的计算机与`bce.baidu.n.shifen.com`服务器之间的网络连接稳定，且延迟较低。如果您在使用该服务器或访问相关应用时遇到问题，那么问题可能不在于网络连接，而是其他因素，如应用服务器本身的问题、软件问题等。
+# -> Based on the provided ping results, we can make the following diagnosis of the network condition:
+# -> 1. **Connectivity**: From the results, you have successfully pinged `bce.baidu.n.shifen.com` with no packet loss (0%!p(MISSING)acket loss). This indicates that the connection between your computer and the server is stable.
+# -> 2. **Latency**: The minimum/average/maximum/standard deviation round-trip latency is: 11.511/11.809/12.107/0.298 ms. These values represent the response time between your computer and the server. Generally, lower latency indicates better network performance. Your latency values are relatively low, indicating good network connectivity.
+# -> In summary, based on this ping result, the network connection between your computer and the `bce.baidu.n.shifen.com` server is stable, and latency is low. If you encounter issues using the server or accessing related applications, the problem may not lie with the network connection but with other factors such as issues with the application server itself or software problems.
 ```
 
 
 ### Interactive mode
 
-`tbd` support multiple rounds dialogus. It can be used in complex tasks or to clarify the question, i.e. if the question raised by the user is not clear or specific enough. 
-
-use `-i` or `--interact` args to enter into interactive mode. `exit` will finished the dialog:
+TBD supports multi-round conversations, which can be used for complex tasks or clarifying questions if the user's initial question is not clear or specific enough. Use the `-i` or `--interact` parameter to enter interactive mode. Type `exit` to exit the conversation:
 
 ```shell
 » tbd chat -i
